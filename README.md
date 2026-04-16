@@ -24,4 +24,10 @@ This is my data science portfolio showcasing my projects and case studies that I
 -Implemented responsive layouts using HTML, CSS, and Flexbox to ensure usability across desktop and mobile devices.
 -Built interactive features such as player leaderboards and image galleries to enhance user engagement and storytelling.
 
-5. 
+5. Passenger Train Management System - FALL 2025 <br>
+-IST659 - Data Administration Concepts and Database Management
+-Designed and implemented a relational database system for a Passenger Train Management System, modeling complex real-world operations like scheduling, ticketing, and maintenance.
+-Developed conceptual and logical data models (ERDs) and normalized schemas to ensure data integrity and scalability.
+-Built advanced SQL functionality including stored procedures, functions, and triggers to enforce business rules and automate processes.
+
+6. 
