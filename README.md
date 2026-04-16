@@ -1,4 +1,4 @@
-# Brealin Redecker Applied Data Science Portfolio
+# Applied Data Science Portfolio
 This is my data science portfolio showcasing my projects and case studies that I have completed in both undergraduate and graduate programs.
 
 1. Predicting Energy Usage in South Carolina - SPRING 2024 <br>
