@@ -1,0 +1,327 @@
+---
+title: "Final Project 1"
+output: html_notebook
+---
+
+```{r}
+#PACKAGES
+#install.packages("arrow")
+library(dplyr)
+library(arrow)
+library(lubridate)
+```
+
+```{r}
+static_house_data <- "C:\\Users\\blredeck\\OneDrive - Syracuse University\\Spring 24\\IST389\\Final Project\\static_house_info_387.csv"
+static_house <- read.csv(static_house_data)
+```
+
+```{r}
+static_house$bldg_id
+```
+
+```{r}
+#One giant dataframe for the weather per county.
+weather_urls <- c("https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500430.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500830.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500630.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500150.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500870.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500190.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500590.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500530.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500510.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500270.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500790.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500350.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500410.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500070.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500570.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500130.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500030.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500450.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500910.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500710.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500250.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500390.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500550.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500850.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500750.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500230.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500890.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500290.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500210.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500690.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500730.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500670.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500770.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500370.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500470.csv",
+             "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/weather/2023-weather-data/G4500310.csv"
+)
+
+weather_data <- lapply(weather_urls, read.csv)
+
+allcounty_weather_data <- do.call(rbind, weather_data)
+
+in_county <- rep(c("G4500430", "G4500830", "G4500630", "G4500150", "G4500870", "G4500190", "G4500590", "G4500530", "G4500510", "G4500270", "G4500790", "G4500350", "G4500410", "G4500070", "G4500570", "G4500130", "G4500030", "G4500450", "G4500910", "G4500710", "G4500250", "G4500390", "G4500550", "G4500850", "G4500750", "G4500230", "G4500890", "G4500290", "G4500210", "G4500690", "G4500730", "G4500670", "G4500770", "G4500370", "G4500470", "G4500310"), each = 8760)
+
+allcounty_weather_data$in.county <- in_county
+
+```
+
+```{r}
+
+allcounty_weather_data$date_time <- as.POSIXct(allcounty_weather_data$date_time)
+
+# Filtering to keep only July
+allcounty_weather_data <- allcounty_weather_data %>%
+  filter(month(date_time) == 7)
+```
+
+```{r}
+#One giant dataframe for each bldg's energy usage
+bldg_urls <- c("https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/421827.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/213330.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/319933.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/152536.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/224833.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/15946.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/312606.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/5081.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/380842.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/408767.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/187375.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/110330.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/180894.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/438302.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/66925.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/69968.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/224243.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/74770.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/77464.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/317721.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/67052.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/121.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/448177.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/385929.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/452081.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/252215.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/311488.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/135778.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/193618.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/126343.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/400236.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/412481.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/153775.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/218528.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/315508.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/447945.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/388882.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/428089.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/294974.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/347073.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/346083.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/113638.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/344346.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/215101.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/308995.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/382806.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/363396.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/446418.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/401347.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/273829.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/121342.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/351272.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/164661.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/176945.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/297913.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/352663.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/362784.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/442759.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/213979.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/111719.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/353448.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/24138.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/296273.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/114407.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/301541.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/472022.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/385315.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/156254.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/266477.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/64499.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/17172.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/424705.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/207620.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/429160.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/111057.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/66593.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/200860.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/338309.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/457641.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/28610.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/27488.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/215797.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/440966.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/239951.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/55646.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/274947.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/273002.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/62433.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/421897.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/273912.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/122693.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/282561.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/472680.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/76106.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/333886.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/248114.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/233297.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/386245.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/422441.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/346726.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/382449.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/440212.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/205782.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/130302.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/46952.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/75945.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/410629.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/186846.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/120826.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/292336.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/394162.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/316859.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/223580.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/456064.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/320971.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/379022.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/350425.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/69859.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/183363.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/396821.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/162387.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/341162.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/124597.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/180942.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/468173.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/151086.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/8414.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/91964.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/426099.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/227084.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/15263.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/10529.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/227394.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/237695.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/9590.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/226002.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/464861.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/127412.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/281810.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/179732.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/43131.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/394268.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/452857.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/95304.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/147770.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/184935.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/423651.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/287266.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/441558.parquet",
+               "https://intro-datascience.s3.us-east-2.amazonaws.com/SC-data/2023-houseData/277961.parquet"
+)
+
+bldg_data <- lapply(bldg_urls, read_parquet)
+
+all_bldg_data <- do.call(rbind, bldg_data)
+```
+
+```{r}
+#Adding bldg numbers
+
+bldg_ids <- rep(c("421827", "213330", "319933", "152536", "224833", "15946", "312606", "5081", "380842", "408767", "187375", "110330", "180894", "438302", "66925", "69968", "224243", "74770", "77464", "317721", "67052", "121", "448177", "385929", "452081", "252215", "311488", "135778", "193618", "126343", "400236", "412481", "153775", "218528", "315508", "447945", "388882", "428089", "294974", "347073", "346083", "113638", "344346", "215101", "308995", "382806", "363396", "446418", "401347", "273829", "121342", "351272", "164661", "176945", "297913", "352663", "362784", "442759", "213979", "111719", "353448", "24138", "296273", "114407", "301541", "472022", "385315", "156254", "266477", "64499", "17172", "424705", "207620", "429160", "111057", "66593", "200860", "338309", "457641", "28610", "27488", "215797", "440966", "239951", "55646", "274947", "273002", "62433", "421897", "273912", "122693", "282561", "472680", "76106", "333886", "248114", "233297", "386245", "422441", "346726", "382449", "440212", "205782", "130302", "46952", "75945", "410629", "186846", "120826", "292336", "394162", "316859", "223580", "456064", "320971", "379022", "350425", "69859", "183363", "396821", "162387", "341162", "124597", "180942", "468173", "151086", "8414", "91964", "426099", "227084", "15263", "10529", "227394", "237695", "9590", "226002", "464861", "127412", "281810", "179732", "43131", "394268", "452857", "95304", "147770", "184935", "423651", "287266", "441558", "277961"), each = 8759)
+
+all_bldg_data$bldg_id <- bldg_ids
+```
+
+```{r}
+all_bldg_data$time <- as.POSIXct(all_bldg_data$time)
+
+# Filtering to keep only July
+all_bldg_data <- all_bldg_data %>%
+  filter(month(time) == 7)
+```
+
+```{r}
+#MERGING NOW
+```
+
+
+```{r}
+#Merging the first two dataframes.
+
+merged_data <- merge(all_bldg_data, static_house, by = "bldg_id", all.x = TRUE)
+```
+
+```{r}
+#renaming date_time to time so that I can merge the data.
+names(allcounty_weather_data)[names(allcounty_weather_data) == "date_time"] <- "time"
+```
+
+```{r}
+#Merging again with weather.
+
+all_data_merged <- merge(merged_data, allcounty_weather_data, by = c("time", "in.county"), all.x = TRUE)
+```
+
+```{r}
+#Cleaning up duplicate time values according to both time and bldg_id.
+duplicate_rows <- duplicated(all_data_merged[, c("time", "bldg_id")])
+
+all_data_merged <- all_data_merged[!duplicate_rows, ]
+
+```
+
+```{r}
+#Creating a column based on total energy consumption
+```
+
+```{r}
+str(all_data_merged_test)
+```
+
+```{r}
+#Getting a total of all electricity usage for each house by the hour.
+
+electricity_cols <- grep("^out\\.electricity", names(all_data_merged), value = TRUE)
+electricity_data <- all_data_merged[, c("bldg_id", electricity_cols)]
+
+total_electricity_by_house <- aggregate(. ~ bldg_id, data = electricity_data, FUN = sum)
+
+colnames(total_electricity_by_house)[-1] <- paste0(colnames(total_electricity_by_house)[-1], "_total")
+
+all_data_merged <- merge(all_data_merged, total_electricity_by_house, by = "bldg_id", all.x = TRUE)
+
+all_data_merged$hour_total_electricity_usage <- rowSums(all_data_merged[, electricity_cols])
+```
+
+```{r}
+#A total of all electricity usage for each house by the month.
+electricity_total_columns <- grep("\\.energy_consumption_total$", names(all_data_merged), value = TRUE)
+
+all_data_merged$month_total_electricity_usage <- rowSums(all_data_merged[electricity_total_columns], na.rm = TRUE)
+```
+
+```{r}
+#Sorting the data frame by bldg_id and time. Makes it nice and neat.
+
+all_data_merged <- all_data_merged %>%
+  arrange(bldg_id, time)
+```
+
+```{r}
+summary(all_data_merged$month_total_electricity_usage)
+summary(all_data_merged$hour_total_electricity_usage)
+```

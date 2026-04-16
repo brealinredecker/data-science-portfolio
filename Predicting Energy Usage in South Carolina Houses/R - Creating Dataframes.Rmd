@@ -1,0 +1,28 @@
+---
+title: "New Dataframes"
+output: html_notebook
+---
+
+
+```{r}
+#Dataframe for
+```
+
+```{r}
+str(all_data_merged)
+colnames(all_data_merged)
+```
+
+```{r}
+if (any(all_data_merged$out.electricity.lighting_garage.energy_consumption_total < 0)) {
+  print("There are negative values in the column.")
+} else {
+  print("There are no negative values in the column.")
+}
+```
+
+```{r}
+negative_column_test <- all_data_merged[all_data_merged$out.electricity.cooling_fans_pumps.energy_consumption_total < 0, ]
+
+negative_column_test
+```

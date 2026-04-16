@@ -1,0 +1,91 @@
+---
+title: "Model 2 FP"
+output: html_notebook
+---
+
+```{r}
+df_model2 <- all_data_merged[ ,c("bldg_id", "time",
+"out.electricity.ceiling_fan.energy_consumption_total",
+"out.electricity.clothes_dryer.energy_consumption_total",
+"out.electricity.clothes_washer.energy_consumption_total",
+"out.electricity.cooling_fans_pumps.energy_consumption_total",
+"out.electricity.cooling.energy_consumption_total",
+"out.electricity.dishwasher.energy_consumption_total",
+'out.electricity.heating_fans_pumps.energy_consumption_total',
+'out.electricity.heating_hp_bkup.energy_consumption_total',
+'out.electricity.heating.energy_consumption_total',
+'out.electricity.hot_tub_heater.energy_consumption_total',
+'out.electricity.hot_tub_pump.energy_consumption_total',
+'out.electricity.hot_water.energy_consumption_total',
+'out.electricity.lighting_exterior.energy_consumption_total',
+'out.electricity.lighting_garage.energy_consumption_total',
+'out.electricity.lighting_interior.energy_consumption_total',
+"out.electricity.plug_loads.energy_consumption_total",
+"out.electricity.pool_heater.energy_consumption_total",
+'out.electricity.pool_pump.energy_consumption_total',
+'out.electricity.range_oven.energy_consumption_total',
+'out.electricity.refrigerator.energy_consumption_total',
+"out.electricity.well_pump.energy_consumption_total"
+)]
+```
+
+```{r}
+summary(all_data_merged$month_total_electricity_usage)
+```
+
+```{r}
+library(readr)
+library(dplyr)
+library(tidyr)
+library(caret)
+
+#Variables for model 2
+selected_vars2 <- c("out.electricity.ceiling_fan.energy_consumption_total",
+"out.electricity.clothes_dryer.energy_consumption_total",
+"out.electricity.clothes_washer.energy_consumption_total",
+"out.electricity.cooling_fans_pumps.energy_consumption_total",
+"out.electricity.cooling.energy_consumption_total",
+"out.electricity.dishwasher.energy_consumption_total",
+'out.electricity.hot_water.energy_consumption_total',
+'out.electricity.lighting_exterior.energy_consumption_total',
+'out.electricity.lighting_garage.energy_consumption_total',
+'out.electricity.lighting_interior.energy_consumption_total',
+"out.electricity.plug_loads.energy_consumption_total",
+'out.electricity.range_oven.energy_consumption_total',
+'out.electricity.refrigerator.energy_consumption_total',
+"out.electricity.well_pump.energy_consumption_total",
+"month_total_electricity_usage"
+)
+
+selected_data2 <- all_data_merged %>% select(all_of(selected_vars2))
+
+#Creating a training set and a test set
+set.seed(123)
+train_index2 <- createDataPartition(selected_data2$month_total_electricity_usage, p = 0.8, list = FALSE)
+train_data2 <- selected_data2[train_index2, ]
+test_data2 <- selected_data2[-train_index2, ]
+
+#Creating the model
+model2 <- lm(month_total_electricity_usage ~ ., data = train_data2)
+
+#Creating predictions
+predictions2 <- predict(model2, newdata = test_data2)
+
+
+#Ploting observed vs predicted values
+plot(test_data2$month_total_electricity_usage, predictions2,
+     xlab = "Observed", ylab = "Predicted",
+     main = "Observed vs. Predicted Values")
+abline(0, 1, col = "red")
+
+#This is the call for Model 2
+summary(model2)
+```
+
+```{r}
+#Predictions
+unique(predictions2)
+
+summary(predictions2)
+
+```

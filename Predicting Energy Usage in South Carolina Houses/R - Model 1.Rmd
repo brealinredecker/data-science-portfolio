@@ -1,0 +1,64 @@
+---
+title: "Model 1 FP"
+output: html_notebook
+---
+
+```{r}
+df_model1 <- all_data_merged[ ,c("bldg_id", "time", "in.sqft", "in.bedrooms", "in.bathroom_spot_vent_hour", 
+                   "in.building_america_climate_zone", "in.geometry_floor_area", "in.geometry_stories",
+                   "in.geometry_wall_type", "in.heating_setpoint", "in.cooling_setpoint",
+                   "in.hvac_heating_type", "in.hvac_cooling_type", "month_total_electricity_usage")]
+```
+
+```{r}
+summary(all_data_merged$month_total_electricity_usage)
+```
+```{r}
+library(readr)
+library(dplyr)
+library(tidyr)
+library(caret)
+
+#Variables for model 1
+selected_vars1 <- c("in.sqft", "in.bedrooms", "in.bathroom_spot_vent_hour", 
+                   "in.building_america_climate_zone", "in.geometry_floor_area", "in.geometry_stories",
+                   "in.geometry_wall_type", "in.heating_setpoint", "in.cooling_setpoint",
+                   "in.hvac_heating_type", "in.hvac_cooling_type", "month_total_electricity_usage")
+
+selected_data1 <- all_data_merged %>% select(all_of(selected_vars1))
+
+#Creating a training set and a test set
+set.seed(123)
+train_index1 <- createDataPartition(selected_data1$month_total_electricity_usage, p = 0.8, list = FALSE)
+train_data1 <- selected_data1[train_index1, ]
+test_data1 <- selected_data1[-train_index1, ]
+
+#Creating the model
+model1 <- lm(month_total_electricity_usage ~ ., data = train_data1)
+
+#Creating predictions
+predictions1 <- predict(model1, newdata = test_data1)
+
+rmse1 <- sqrt(mean((test_data1$month_total_electricity_usage - predictions1)^2))
+mae1 <- mean(abs(test_data1$month_total_electricity_usage - predictions1))
+rsquared1 <- cor(test_data1$month_total_electricity_usage, predictions1)^2
+
+#Ploting observed vs predicted values
+plot(test_data1$month_total_electricity_usage, predictions1,
+     xlab = "Observed", ylab = "Predicted",
+     main = "Observed vs. Predicted Values")
+abline(0, 1, col = "red")
+
+#This is the call for Model 1
+summary(model1)
+```
+
+```{r}
+#Predictions
+unique(predictions1)
+
+summary(predictions1)
+```
+
+
+
