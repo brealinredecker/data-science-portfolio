@@ -12,4 +12,6 @@ This is my data science portfolio showcasing my projects and case studies that I
 -Worked on a three man group project to design a full information system for NBI addressing operational inefficiencies and system limitations.
 -Developed system models including Data Flow Diagrams (DFD) and Entity Relationship Diagrams (ERDs) to map business processes and data structure. <br>
 
-3. 
+3. Fast Food Restaurants: Who Should You Choose? - FALL 2024 <br>
+-IST421 - Information Visualization
+-
