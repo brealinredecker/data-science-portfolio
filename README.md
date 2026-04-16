@@ -18,4 +18,10 @@ This is my data science portfolio showcasing my projects and case studies that I
 -Developed a custom “health score” metric to evaluate and compare menu items across restaurants
 -Built visualizations to compare health trends, identify healthiest/unhealthiest items, and challenge common assumptions about fast food and compiled them into a poster.
 
-4. 
+4. Syracuse University Women's Rugby Website - SPRING 2025 <br>
+-IST263 - Introduction to Front-End Web Development
+-Designed and developed a multi-page website for the Syracuse University Women’s Rugby Team to showcase team information, roster, and performance stats.
+-Implemented responsive layouts using HTML, CSS, and Flexbox to ensure usability across desktop and mobile devices.
+-Built interactive features such as player leaderboards and image galleries to enhance user engagement and storytelling.
+
+5. 
