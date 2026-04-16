@@ -14,4 +14,8 @@ This is my data science portfolio showcasing my projects and case studies that I
 
 3. Fast Food Restaurants: Who Should You Choose? - FALL 2024 <br>
 -IST421 - Information Visualization
--
+-Collected, cleaned, and merged nutritional data from multiple fast food chains to create a unified dataset for analysis
+-Developed a custom “health score” metric to evaluate and compare menu items across restaurants
+-Built visualizations to compare health trends, identify healthiest/unhealthiest items, and challenge common assumptions about fast food and compiled them into a poster.
+
+4. 
