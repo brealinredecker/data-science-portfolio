@@ -43,21 +43,21 @@ Graduate student at Syracuse University focused on data analysis and predictive 
 - Analyzed ~350k+ animal shelter records across multiple cities <br>
 - Performed data cleaning, feature engineering, and regression modeling <br>
 - Identified key drivers of adoption outcomes and visualized insights <br>
-- <a href="https://github.com/brealinredecker/data-science-portfolio/tree/9c8e8380117315c2782431a7bdb0604e112c7ec2/03.%20Fast%20Food%20Restaurants%3A%20Who%20Should%20You%20Choose%3F">View Project</a><br>
+- <a href="https://github.com/brealinredecker/data-science-portfolio/tree/65486279510d0c3172dd598c2f72945294f0fd40/06.%20Dog%20Adoption%20Predictions">View Project</a><br>
 
 <h3>7. Movie and Dog Popularity Case Study Replication - FALL 2025</h3>
 - IST686 - Scripting for Data Analysis <br>
 - Replicated and extended an academic study on media influence and dog breed popularity <br>
 - Applied frequentist and Bayesian statistical methods (t-tests, regression, correlation analysis) <br>
 - Found significant long-term increases in breed popularity, with declining effects in more recent films <br>
-- <a href="https://github.com/brealinredecker/data-science-portfolio/tree/9c8e8380117315c2782431a7bdb0604e112c7ec2/03.%20Fast%20Food%20Restaurants%3A%20Who%20Should%20You%20Choose%3F">View Project</a><br>
+- <a href="https://github.com/brealinredecker/data-science-portfolio/tree/65486279510d0c3172dd598c2f72945294f0fd40/07.%20Movie%20and%20Dog%20Popularity%20Case%20Study%20Replication">View Project</a><br>
 
 <h3>8. Baseball Attendance Predictions - FALL 2025</h3>
 - MAS766 - Linear Statistical Models I <br>
 - Analyzed MLB game data (2015–2025) to identify key drivers of attendance <br>
 - Built stepwise regression models incorporating interaction and seasonality effects <br>
 - Developed a final model explaining ~73% of attendance variance with actionable insights <br>
-- <a href="https://github.com/brealinredecker/data-science-portfolio/tree/9c8e8380117315c2782431a7bdb0604e112c7ec2/03.%20Fast%20Food%20Restaurants%3A%20Who%20Should%20You%20Choose%3F">View Project</a><br>
+- <a href="https://github.com/brealinredecker/data-science-portfolio/tree/65486279510d0c3172dd598c2f72945294f0fd40/08.%20Baseball%20Attendance%20Predictions">View Project</a><br>
 
 <h3>9. Premier League Match Performance - SPRING 2025</h3>
 - IST722 - Data Warehouse <br>
