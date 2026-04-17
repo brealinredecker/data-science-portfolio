@@ -4,8 +4,8 @@ Graduate student at Syracuse University with experience in data analysis, statis
 <h2>Projects</h2>
 
 <h3>1. Predicting Energy Usage in South Carolina - SPRING 2024 </h3>
--IST387 - Introduction to Data Science. <br>
--Worked on a two man group project to predict energy usage in South Carolina houses in the summer. <br>
+IST387 - Introduction to Data Science.
+<li>>Worked on a two man group project to predict energy usage in South Carolina houses in the summer.</li>
 -Created 5 different regression models grouping the variables into different categories in order to predict "month_total_electricty_usage". <br>
 -Created visuals to explore the differences between the different models.<br>
 
