@@ -1,0 +1,1156 @@
+---
+title: "IST686 Project Analysis"
+author: "Brealin Redecker"
+date: "2025-11-10"
+output: html_document
+---
+
+# FINAL PROJECT: CASE STUDY REPLICATION
+
+This final project is replicating a statistical case study. The study that I chose is titled *"Dog Movie Stars and Dog Breed Popularity: A Case Study in Media Influence on Choice" by Stefano Ghirlanda, Alberto Acerbi, and Harold Herzog.* This study contains a series of tests including one sample t-tests, pearsons correlations, linear regressions, two sample t-tests, and wilcoxon tests.
+
+```{r}
+library(tidyverse)
+library(carData)
+library(car)
+library(easystats)
+library(BayesFactor)
+library(posterior)
+library(performance)
+library(MCMCpack)
+library(DHARMa)
+library(caret)
+library(bayestestR)
+library(HDInterval)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(broom)
+```
+
+## LOADING, CLEANING, AND EXPLORATION
+
+First we want to load and look at our data.
+
+```{r}
+AKC <- AKC <- read.csv2("AKC.csv")
+movie_data <- read.csv("moviesAnalyzed.csv")
+
+
+#view(AKC)
+dim(AKC)
+names(AKC)
+#summary(AKC)
+
+#view(movie_data)
+dim(movie_data)
+names(movie_data)
+#summary(movie_data)
+```
+
+The case study used 36 movies from our movie data. We need to subset them out, confirming that we pulled out the 36.
+
+```{r}
+movies <- subset(movie_data, include == 1)
+nrow(movies)
+```
+
+```{r}
+names(movies)
+```
+
+Now I want to make sure that my data is numeric and log the viewers variable. We want to log the viewers variables because they are extremely right skewed. (PLOTTED BELOW). After we log the two viewer variables we can see that they are much more fitted for our statistical analysis. This additionally is mirrored in the case study.
+
+```{r}
+par(mfrow = c(2,1))
+hist(movies$viewers)
+hist(movies$viewers1)
+```
+
+```{r}
+str(movies)  #Everything looks good, no need to transform.
+
+movies$log_total_viewers <- log10(movies$viewers)
+movies$log_viewers1 <- log10(movies$viewers1)
+```
+
+```{r}
+par(mfrow = c(2,1))
+hist(movies$log_total_viewers)
+hist(movies$log_viewers1)
+```
+
+For any of the analysis that use log_viewers but we have NA's we are going to use this data set that dropped all rows without values called **movie_logreg**.
+
+```{r}
+movies_logreg <- subset(movies, !is.na(log_viewers1))
+movies_logred <- subset(movies, !is.na(log_total_viewers))
+nrow(movies_logreg)
+```
+
+Now that our data is as similar to the case study as possible, we will move into replicating the tests, featured in the case study.
+
+# SECTION 1: MAIN ANALYSES ON MOVIE EFFECTS
+
+In this section we want to recreate **Figure 2a** by conducting 4 different one sample t-tests in order to test the effects.
+
+In the case study they used the following formula to define the trend-change index:\
+$\Delta_T = 100 \times \frac{B_T - A_T}{R_{\text{bar}}}$
+
+Our Null Hypothesis for the following t-tests, substituting **T** for our effect size **(1, 2, 5, 10)**:\
+$H_0: \mu_{\Delta_T} = 0$
+
+Our Alternative Hypothesis for the following t-tests substituting **T** for our effect size **(1, 2, 5, 10)**:\
+$H_a: \mu_{\Delta_T} \neq 0$
+
+## T-TEST ON EFFECT 1 - (1 year trend)
+
+Our first test using effect1 yielded a p value of 0.009373 and a CI of [0.015, 0.099] which is statistically significant with our alpha of 0.05, therefore we would reject the null hypothesis. This would suggest that our average 1-year trend change is significantly different from zero. The test also yielded a mean of 0.057 which suggests a positive trend of approximately 5.7%.
+
+```{r}
+t.test(movies$effect1, mu = 0)
+```
+
+### Bayesian Approach:
+
+```{r}
+
+effect1 <- movies$effect1
+effect1 <- effect1[is.finite(effect1)]   # removes NA, NaN, Inf
+
+bf_effect1 <- ttestBF(x = effect1, mu = 0, rscale = "medium")
+bf_effect1
+
+post_effect1 <- posterior(bf_effect1, iterations = 50000)
+
+mu_effect1 <- as.mcmc(post_effect1[, "mu"])
+
+mean(mu_effect1)
+hdi(mu_effect1, credMass = 0.95)
+
+```
+
+## T-TEST ON EFFECT 2 - (2 year trend)
+
+Our second test using effect2 yielded a p value of 0.0014 and a CI of [0.034, 0.129] which is statistically significant with our alpha of 0.05, therefore we would reject the null hypothesis. This would suggest that our average 2-year trend change is significantly different from zero. The test also yielded a mean of 0.0813 which suggests a positive trend of approximately 8.1%.
+
+```{r}
+t.test(movies$effect2, mu = 0)
+```
+
+### Bayesian Approach:
+
+```{r}
+effect2 <- movies$effect2
+effect2 <- effect2[is.finite(effect2)]
+
+bf_effect2 <- ttestBF(x = effect2, mu = 0)
+bf_effect2
+
+post_effect2 <- posterior(bf_effect2, iterations = 50000)
+mu_effect2 <- as.mcmc(post_effect2[, "mu"])
+
+mean(mu_effect2)
+hdi(mu_effect2, credMass = 0.95)
+
+```
+
+## T-TEST ON EFFECT 5 - (5 year trend)
+
+Our third test using effect5 yielded a p value of 0.00073 and a CI of [0.043, 0.147] which is statistically significant with our alpha of 0.05, therefore we would reject the null hypothesis. This would suggest that our average 5-year trend change is significantly different from zero. The test also yielded a mean of 0.0953 which suggests a positive trend of approximately 9.5%.
+
+```{r}
+t.test(movies$effect5, mu = 0)
+```
+
+### Bayesian Approach:
+
+```{r}
+effect5 <- movies$effect5
+effect5 <- effect5[is.finite(effect5)]
+
+bf_effect5 <- ttestBF(x = effect5, mu = 0)
+bf_effect5
+
+post_effect5 <- posterior(bf_effect5, iterations = 50000)
+mu_effect5 <- as.mcmc(post_effect5[, "mu"])
+
+mean(mu_effect5)
+hdi(mu_effect5, credMass = 0.95)
+
+```
+
+## T-TEST ON EFFECT 10 - (10 year trend)
+
+Our fourth test using effect10 yielded a p value of 0.0047 and a CI of [0.033, 0.165] which is statistically significant with our alpha of 0.05, therefore we would reject the null hypothesis. This would suggest that our average 10-year trend change is significantly different from zero. The test also yielded a mean of 0.099 which suggests a positive trend of approximately 9.9%.
+
+```{r}
+t.test(movies$effect10, mu = 0)
+```
+
+### Bayesian Approach:
+
+```{r}
+effect10 <- movies$effect10
+effect10 <- effect10[is.finite(effect10)]
+
+bf_effect10 <- ttestBF(x = effect10, mu = 0)
+bf_effect10
+
+post_effect10 <- posterior(bf_effect10, iterations = 50000)
+mu_effect10 <- as.mcmc(post_effect10[, "mu"])
+
+mean(mu_effect10)
+hdi(mu_effect10, credMass = 0.95)
+
+```
+
+### CONCLUSION:
+
+Across all four different time window, dog breeds featured in films exhibited significant increases in their popularity relative to pre-release trends. Using one sample t-tests, looking at the one-year trend change there was a positive mean effect yielding $\Delta_1 = 0.057$ , t(34) = 2.75, p = 0.009. This indicates a measurable short-term impact of the movie appearance on number of registrations of different dog breeds. When running the test for our two-year trend change it was more positive $\Delta_T = 0.081$, t(34) = 3.49, p = 0.01, which suggests that the influence of films on the consumer grew beyond just the initial release. The largest sustained effect occurred in our five year trend change, $\Delta_5 = 0.095$, t(31) = 3.75, p \< 0.001, which indicates to us that breeds that were featured in movies experienced nearly a 10% increase in registrations over this period. The ten-year trend was also positive, $\Delta_{10} = 0.099$, t(29) = 3.06, p = 0.005, indicating that there was an effect at least a decade after the movie's release.
+
+The results from our t-tests were consistent with the findings in the case study and demonstrate that dog movies exert a statistically significant effect on breed popularity up to 10 years post-release.
+
+```{r}
+model_results <- data.frame(
+  Model = c("Δ1", "Δ2", "Δ5", "Δ10"),
+  Mean  = c(
+    mean(movies$effect1, na.rm = TRUE),
+    mean(movies$effect2, na.rm = TRUE),
+    mean(movies$effect5, na.rm = TRUE),
+    mean(movies$effect10, na.rm = TRUE)
+  )
+)
+
+model_results$Model <- factor(model_results$Model,
+                              levels = c("Δ1", "Δ2", "Δ5", "Δ10"))
+
+ggplot(model_results, aes(x = Model, y = Mean)) +
+  geom_col(fill = "steelblue") +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(
+    title = "Mean Trend Change Across Four Models",
+    x = "Model",
+    y = "Mean Trend Change (ΔT)"
+  ) +
+  theme_minimal(base_size = 14)
+
+ggsave("section1.png", width = 8, height = 6, dpi = 300)
+```
+
+# SECTION 2: CORRELATION WITH RELEASE YEAR
+
+In this section we want to recreate **Figure 2b and Figure 3** by conducting three different correlation tests using the Pearson's method. The purpose behind these tests are to answer the question: Do newer movies have smaller breed-popularity effects than older ones?
+
+Our Null Hypothesis for the following correlation tests, substituting **T** for our effect size **(1, 2, 5, 10)**:\
+$H_0: \rho_{\text{year}, \Delta_T} = 0$
+
+Our Alternative Hypothesis for the following t-tests substituting **T** for our effect size **(1, 2, 5, 10)**:\
+$H_a: \rho_{\text{year}, \Delta_T} \neq 0$
+
+## CORRELATION TEST (effect 2, year)
+
+Our first correlation test yielded a p-value of 0.00083 which is significantly lower than our alpha of 0.05 and a CI of [-0.7396, -0.2511], which does not contain 0. It also yielded a correlation value of -0.5392. Given the statistical significance of the test, we can interpret that newer movies tend to produce smaller 2-year popularity effects than older movies.
+
+```{r}
+cor.test(movies$effect2, movies$year, method = "pearson")
+```
+
+### Bayesian Approach:
+
+```{r}
+df2 <- data.frame(
+  year    = movies$year,
+  effect2 = movies$effect2
+)
+
+df2 <- df2[is.finite(df2$year) & is.finite(df2$effect2), ]
+
+
+bf_r2 <- correlationBF(df2$year, df2$effect2, rscale = "medium")
+bf_r2 
+
+post_r2 <- posterior(bf_r2, iterations = 50000)
+rho_r2  <- as.mcmc(post_r2[, "rho"])
+
+mean(rho_r2)
+hdi(rho_r2, credMass = 0.95)
+
+```
+
+## CORRELATION TEST (effect 5, year)
+
+Our second correlation test yielded a p-value of 0.00146 which is lower than our alpha of 0.05 and a CI of [-0.7472, –0.2342], which does not contain 0. It also yielded a correlation value of -0.5389. Given the statistical significance of the test, we can interpret that this test also implies that newer movies tend to produce smaller 5-year popularity effects than older movies, or that the influence of movies has declined over time.
+
+```{r}
+cor.test(movies$effect5, movies$year, method = "pearson")
+```
+
+### Bayesian Approach:
+
+```{r}
+df5 <- data.frame(
+  year    = movies$year,
+  effect5 = movies$effect5
+)
+
+df5 <- df5[is.finite(df5$year) & is.finite(df5$effect5), ]
+
+bf_r5 <- correlationBF(df5$year, df5$effect5, rscale = "medium")
+bf_r5
+
+post_r5 <- posterior(bf_r5, iterations = 50000)
+rho_r5  <- as.mcmc(post_r5[, "rho"])
+
+mean(rho_r5)
+hdi(rho_r5, credMass = 0.95)
+```
+
+## CORRELATION TEST (effect 10, year)
+
+Our third and final correlation test yielded a p-value of 0.0057 which is lower than our alpha of 0.05 and a CI of [-0.7239, -0.1602], which does not contain 0. It also yielded a correlation value of -0.4920. Given the statistical significance of the test, we can interpret, consistent with our other tests, that older movies continue to produce a larger popularity effect while newer movies show smaller long-term impacts.
+
+```{r}
+cor.test(movies$effect10, movies$year, method = "pearson")
+```
+
+### Bayesian Approach:
+
+```{r}
+df10 <- data.frame(
+  year     = movies$year,
+  effect10 = movies$effect10
+)
+
+df10 <- df10[is.finite(df10$year) & is.finite(df10$effect10), ]
+
+bf_r10 <- correlationBF(df10$year, df10$effect10, rscale = "medium")
+bf_r10
+
+post_r10 <- posterior(bf_r10, iterations = 50000)
+rho_r10  <- as.mcmc(post_r10[, "rho"])
+
+mean(rho_r10)
+hdi(rho_r10, credMass = 0.95)
+
+```
+
+## CONCLUSION:
+
+By running these three pearson correlation tests and interpreting the results, we were able to examine the influence of movies on dog breed popularity. All three tests yielded negative correlation values, which implies that older movies produced stronger increases in breed registrations compared to newer releases.
+
+When compared to the case study, we find that this replicates what was found. Both the case study and our tests found a clear decline in the magnitude of movie-driven breed popularity effects.
+
+```{r}
+corr_data <- movies %>%
+  dplyr::select(year, effect2, effect5, effect10) %>%
+  pivot_longer(
+    cols = starts_with("effect"),
+    names_to = "window",
+    values_to = "effect"
+  ) %>%
+  filter(is.finite(year), is.finite(effect))
+
+corr_data$window <- factor(
+  corr_data$window,
+  levels = c("effect2", "effect5", "effect10"),
+  labels = c("Δ2 (2-year effect)", "Δ5 (5-year effect)", "Δ10 (10-year effect)")
+)
+
+ggplot(corr_data, aes(x = year, y = effect)) +
+  geom_point(alpha = 0.7) +
+  geom_smooth(method = "lm", se = FALSE) +
+  facet_wrap(~ window, ncol = 3) +
+  labs(
+    title = "Release Year vs. Movie-Driven Breed Popularity Effects",
+    x = "Release year",
+    y = "Trend change index (ΔT)"
+  ) +
+  theme_minimal(base_size = 14)
+ggsave("Section2.pdf", width = 8, height = 6, dpi = 300)
+```
+
+# SECTION 3: LINEAR REGRESSIONS
+
+In this third section we will run the main, key, linear regressions.
+
+Our Null Hypothesis for the following models:\
+$H_0: \beta_{\text{year}} = 0 \quad \text{and} \quad\beta_{log(\text{viewers1})} = 0$
+
+Our Alternative Hypothesis for the following models:\
+$H_a: \beta_{\text{year}} \neq 0 \quad \text{and} \quad\beta_{log(\text{viewers1})} \neq 0$
+
+## MODEL 1 - (effect1 \~ year + log_viewers1)
+
+In our first model we yielded a p-value of 0.02569 which is below our alpha of 0.05 which is statistically significant. Our year value yielded a p-value fo 0.208 which is not statistically significant, therefore, holding the audience size constant the release year does not provide enough evidence to predict the 1 year trend change. Our viewers value yielded a p-value of 0.52 which is also not significant under the alpha of 0.05 and that there is not enough evidence to suggest a relationship between audience sizes and effect sizes. Our adjusted R2 is 0.343 or approximately 34% of the variance in effect size 1 is explained by year and log_viewers_1.
+
+```{r}
+model1 <- lm(effect1 ~ year + log_viewers1, data = movies_logreg)
+summary(model1)
+```
+
+### Bayesian Approach:
+
+```{r}
+df <- movies_logreg[
+  is.finite(movies_logreg$year) &
+  is.finite(movies_logreg$log_viewers1), ]
+
+bf_m1 <- regressionBF(
+  effect1 ~ year + log_viewers1,
+  data = df,
+  rscaleCont = "medium"
+)
+
+bf_m1
+
+bf_m1_full <- bf_m1[3]
+
+post_m1 <- posterior(bf_m1_full, iterations = 10000)
+
+colnames(post_m1)
+
+beta_year_m1  <- as.mcmc(post_m1[, "year"])
+beta_view_m1  <- as.mcmc(post_m1[, "log_viewers1"])
+
+mean(beta_year_m1); hdi(beta_year_m1)
+mean(beta_view_m1); hdi(beta_view_m1)
+
+```
+
+## MODEL 2 - (effect2 \~ year + log_viewers1)
+
+In our second model we yielded a p value of 0.09957 which is not significant under our alpha of 0.05. When looking at our variables we can see that none of our predictors have a significant p-value as well. As a whole our entire model is not statistically significant and there is not enough evidence to draw any conclusions about effect size.
+
+```{r}
+model2 <- lm(effect2 ~ year + log_viewers1, data = movies_logreg)
+summary(model2)
+```
+
+### Bayesian Approach
+
+```{r}
+bf_m2 <- regressionBF(
+  effect2 ~ year + log_viewers1,
+  data = df,
+  rscaleCont = "medium"
+)
+
+bf_m2
+bf_m2_full <- bf_m2[3]
+
+post_m2 <- posterior(bf_m2_full, iterations = 10000)
+
+beta_year_m2 <- as.mcmc(post_m2[, "year"])
+beta_view_m2 <- as.mcmc(post_m2[, "log_viewers1"])
+
+mean(beta_year_m2); hdi(beta_year_m2)
+
+
+```
+
+## MODEL 3 - (effect5 \~ year + log_viewers1)
+
+Our third model as a whole yielded a p-value of 3.3034e-05 which is significantly less than our alpha of 0.05, or approximately 0. When looking at our predictors, the year variable yielded a p-value of 0.00250 which is statistically significant and a coefficient of -0.0093 which implicates a highly significant, negative effect. This can be interpreted that holding audience size constant, for each additional year of the movies release the 5 year trend change effect decreases by approximately 0.93% points, or newer movies have a weaker influence while older movies seem to have a stronger long term influence. When looking at the log_viewers predictor, we yielded a p-value of 0.3719 which is not significant and there is not enough evidence to support any findings. Our model as a whole, yielded an adjusted R2 of 0.8502 which implies that approximately 85% of the variance can be attributed to year and log_viewers regarding a 5 year trend change.
+
+```{r}
+model3 <- lm(effect5 ~ year + log_viewers1, data = movies_logreg)
+summary(model3)
+```
+
+### Bayesian Approach
+
+```{r}
+df3 <- subset(
+  movies_logreg,
+  is.finite(effect5) &
+    is.finite(year) &
+    is.finite(log_viewers1)
+)
+
+bf_m3 <- regressionBF(
+  effect5 ~ year + log_viewers1,
+  data = df3,
+  rscaleCont = "medium"
+)
+
+bf_m3
+bf_m3_full <- bf_m3[3]
+
+post_m3 <- posterior(bf_m3_full, iterations = 10000)
+
+beta_year_m3 <- as.mcmc(post_m3[, "year"])
+beta_view_m3 <- as.mcmc(post_m3[, "log_viewers1"])
+
+mean(beta_year_m3); hdi(beta_year_m3)
+mean(beta_view_m3); hdi(beta_view_m3)
+```
+
+## MODEL 4 - (effect10 \~ year + log_viewers1)
+
+In our fourth and final main effect regression model, we yielded a p-value of 6.735e-07 which is lower than our alpha and the lowest p-value we have seen among the models. The year predictor yielded a p-value of 1.86e-06 which is approximately 0 with a coefficient of -0.0198. This implicates a highly significant, negative effect greater than our 5 year trend change. When holding the audience constant, each additional year decreases the 10 year trend change effect by 1.98 percentage points. This can also be interpreted as older movies drive a very large decade long increase in breed popularity and newer movies have virtually no long term effect. Our log_viewers yielded a p_value of 0.962 which is not significant at all, which has remained constant between all four models. Our model as a whole yielded an adjusted R2 of 0.948 which means that approximately 94.8% of the variance in regards to a 10 year trend change effect can be explained by year and log_viewers1.
+
+```{r}
+model4 <- lm(effect10 ~ year + log_viewers1, data = movies_logreg)
+summary(model4)
+```
+
+### Bayesian Approach
+
+```{r}
+df4 <- subset(
+  movies_logreg,
+  is.finite(effect10) &
+    is.finite(year) &
+    is.finite(log_viewers1)
+)
+
+bf_m4 <- regressionBF(
+  effect10 ~ year + log_viewers1,
+  data = df4,
+  rscaleCont = "medium"
+)
+
+bf_m4
+bf_m4_full <- bf_m4[3]
+
+post_m4 <- posterior(bf_m4_full, iterations = 10000)
+
+beta_year_m4 <- as.mcmc(post_m4[, "year"])
+beta_view_m4 <- as.mcmc(post_m4[, "log_viewers1"])
+
+mean(beta_year_m4); hdi(beta_year_m4)
+mean(beta_view_m4); hdi(beta_view_m4)
+
+```
+
+## CONCLUSION:
+
+Our first and second model using effect size 1 and 2, both had little to no statistical significance to our findings and we were not able to draw meaningful conclusions. Our third and fourth model using effect size 5 and 10 both had great statistical significance and we were able to conclude that older movies had a greater long term effect compared to newer movies. In all four models the log_viewers had no significant impact, while year did.
+
+When comparing to the case study it was concurrent with their findings that the long-term cultural impact of dog movies has declined with time. Older movies exert much stronger effects on breed preferences than more modern releases.
+
+```{r}
+library(broom)
+
+tidy_all <- bind_rows(
+  tidy(model1) %>% mutate(model = "Δ1"),
+  tidy(model2) %>% mutate(model = "Δ2"),
+  tidy(model3) %>% mutate(model = "Δ5"),
+  tidy(model4) %>% mutate(model = "Δ10")
+)
+
+tidy_coefs <- tidy_all %>%
+  filter(term %in% c("year", "log_viewers1"))
+
+ggplot(tidy_coefs, aes(
+  x = estimate, 
+  y = interaction(model, term),
+  color = term
+)) +
+  geom_point(size = 3) +
+  geom_errorbarh(aes(xmin = estimate - std.error * 1.96,
+                     xmax = estimate + std.error * 1.96),
+                 height = 0.2) +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  labs(
+    title = "Regression Coefficients Across Four Models",
+    x = "Coefficient Estimate",
+    y = "Model & Predictor",
+    color = "Predictor"
+  ) +
+  theme_minimal(base_size = 14)
+ggsave("section3.pdf", width = 8, height = 6, dpi = 300)
+```
+
+# SECTION 4: CHECKING TOTAL YEARS
+
+In this fourth section we are going to run our main regression models again, this time using total_viewers instead of opening_weekend viewers.
+
+Our Null Hypothesis for the following models:\
+$H_0: \beta_{\text{year}} = 0 \quad \text{and} \quad\beta_{log(\text{total_viewers})} = 0$
+
+Our Alternative Hypothesis for this following models:\
+$H_0: \beta_{\text{year}} \neq 0 \quad \text{and} \quad\beta_{log(\text{total_viewers})} \neq 0$
+
+## MODEL 5 - (effect1 \~ year + log_total_viewers)
+
+Our fifth model yielded a p value of 0.1566 which is not significant under our alpha of 0.05. When looking at our variables we can see that none of our predictors have a significant p-value as well. As a whole our entire model is not statistically significant and there is not enough evidence to draw any conclusions about effect size using total_viewership. We additionally have a small adjusted R2 as well.
+
+```{r}
+model5 <- lm(effect1 ~ year + log_total_viewers, data = movies_logreg)
+summary(model5)
+```
+
+### Bayesian Approach
+
+```{r}
+dfTV <- movies_logreg[
+  is.finite(movies_logreg$year) &
+  is.finite(movies_logreg$log_total_viewers), ]
+
+bf_m5 <- regressionBF(
+  effect1 ~ year + log_total_viewers,
+  data = dfTV,
+  rscaleCont = "medium"
+)
+
+bf_m5 
+bf_m5_full <- bf_m5[3]
+
+post_m5 <- posterior(bf_m5_full, iterations = 10000)
+
+beta_year_m5 <- as.mcmc(post_m5[, "year"])
+beta_view_m5 <- as.mcmc(post_m5[, "log_total_viewers"])
+
+mean(beta_year_m5); hdi(beta_year_m5, credMass = 0.95)
+mean(beta_view_m5); hdi(beta_view_m5, credMass = 0.95)
+
+```
+
+## MODEL 6 - (effect2 \~ year + log_total_viewers)
+
+Model 6 also yielded a p-value of 0.2451 and is not statistically significant. It has an even smaller adjusted R2 than Model 5. Both model 5 and 6 do not have enough statistical significant evidence in order to suggest that there is a difference between newer and older movies.
+
+```{r}
+model6 <- lm(effect2 ~ year + log_total_viewers, data = movies_logreg)
+summary(model6)
+```
+
+### Bayesian Approach:
+
+```{r}
+bf_m6 <- regressionBF(
+  effect2 ~ year + log_total_viewers,
+  data = dfTV,
+  rscaleCont = "medium"
+)
+
+bf_m6
+bf_m6_full <- bf_m6[3]
+
+post_m6 <- posterior(bf_m6_full, iterations = 10000)
+
+beta_year_m6 <- as.mcmc(post_m6[, "year"])
+beta_view_m6 <- as.mcmc(post_m6[, "log_total_viewers"])
+
+mean(beta_year_m6); hdi(beta_year_m6)
+mean(beta_view_m6); hdi(beta_view_m6)
+
+```
+
+## MODEL 7 - (effect5 \~ year + log_total_viewers)
+
+Model 7 yielded a p-value of 4.394e-05 which is extremely small and less than our alpha of 0.05, indicating statistical significance compared to the previous models (5 and 6). Our year predictor yielded a p-value of 0.00025 indicating statistical significance and a coeffecient of -0.00997. Holding total_viewers constant, each additional year decreases the 5 year trend change effect by 0.00997, or approximately 0.99%. Our total_viewers predictor is not statistically significant with a p-value of 0.7615 and we can not say that it reliably contributes to the model. Our model as a whole has an adjusted R2 of 0.8387, which means that approximately 84% of the variance in our model can be explained by year and total_viewers.
+
+```{r}
+model7 <- lm(effect5 ~ year + log_total_viewers, data = movies_logreg)
+summary(model7)
+```
+
+### 0.99%Bayesian Approach:
+
+```{r}
+dfTV5 <- subset(
+  movies_logreg,
+  is.finite(effect5) &
+    is.finite(year) &
+    is.finite(log_total_viewers)
+)
+
+bf_m7 <- regressionBF(
+  effect5 ~ year + log_total_viewers,
+  data = dfTV5,
+  rscaleCont = "medium"
+)
+
+bf_m7
+bf_m7_full <- bf_m7[3]
+
+post_m7 <- posterior(bf_m7_full, iterations = 10000)
+
+beta_year_m7 <- as.mcmc(post_m7[, "year"])
+beta_view_m7 <- as.mcmc(post_m7[, "log_total_viewers"])
+
+mean(beta_year_m7); hdi(beta_year_m7, credMass = 0.95)
+mean(beta_view_m7); hdi(beta_view_m7, credMass = 0.95)
+
+```
+
+## MODEL 8 - (effect10 \~ year + log_total_viewers)
+
+Our final regression model, yielded a p-value of 3.285e-07 satistifying our alpha conditions. Our year predictor yielded a p-value of 1.66e-06 and a coefficient of -0.02177. Holding total_viewers constant, with each additional year, the 10 year trend change effect size decreases by 0.02177 or 2.177%. Our total_viewers did not have a signficant p-value and therefore, like our other models, does not reliably contribute to any predicitions. Our model as a whole yielded an adjusted R2 of 0.9557, which means that approximately 95.5% of the variance of effect size 10 can be attributed to year and total_viewers.
+
+```{r}
+model8 <- lm(effect10 ~ year + log_total_viewers, data = movies_logreg)
+summary(model8)
+```
+
+### Bayesian Approach:
+
+```{r}
+dfTV10 <- subset(
+  movies_logreg,
+  is.finite(effect10) &
+    is.finite(year) &
+    is.finite(log_total_viewers)
+)
+
+bf_m8 <- regressionBF(
+  effect10 ~ year + log_total_viewers,
+  data = dfTV10,
+  rscaleCont = "medium"
+)
+
+bf_m8
+bf_m8_full <- bf_m8[3]
+
+post_m8 <- posterior(bf_m8_full, iterations = 10000)
+
+beta_year_m8 <- as.mcmc(post_m8[, "year"])
+beta_view_m8 <- as.mcmc(post_m8[, "log_total_viewers"])
+
+mean(beta_year_m8); hdi(beta_year_m8, credMass = 0.95)
+mean(beta_view_m8); hdi(beta_view_m8, credMass = 0.95)
+
+```
+
+## CONCLUSION:
+
+After running our main four regression models using total_viewers instead of opening weekend there was a consistent pattern, similar to our opening weekend regression, that effect size 1 and 2 both indicate that there is no difference between older and newer movies while effect size 5 and 10 both suggest that there is evidence for our alternative, and older movies contribute more to dog breed registrations. In all four models it is clear that the release year has a strong statistical impact on the models than the viewership when it comes to dog breed popularity.
+
+These finding are all conclusive with the findings in the case study.
+
+```{r}
+tidy_TV <- bind_rows(
+  tidy(model5) %>% mutate(model = "Δ1"),
+  tidy(model6) %>% mutate(model = "Δ2"),
+  tidy(model7) %>% mutate(model = "Δ5"),
+  tidy(model8) %>% mutate(model = "Δ10")
+)
+
+tidy_TV2 <- tidy_TV %>% filter(term %in% c("year", "log_total_viewers"))
+
+ggplot(tidy_TV2, aes(
+  x = estimate,
+  y = interaction(model, term),
+  color = term
+)) +
+  geom_point(size = 3) +
+  geom_errorbarh(aes(
+    xmin = estimate - 1.96 * std.error,
+    xmax = estimate + 1.96 * std.error
+  ), height = 0.2) +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  labs(
+    title = "Coefficient Estimates for Total-Viewership Models",
+    x = "Coefficient Estimate",
+    y = "Model × Predictor"
+  ) +
+  theme_minimal(base_size = 14)
+ggsave("section4.pdf", width = 8, height = 6, dpi = 300)
+```
+
+# SECTION 5: PRE RELEASE TRENDS
+
+In this fifth section we want to answer the question: were breeds already rising before the movie came out? In other words we want to find out if the movie effect is actually causal or not.
+
+Our null hypothesis for this section is:\
+$H_0: \mu_{\text{before}_T} = 0$
+
+Our alternative hypothesis for this section is:\
+$H_a: \mu_{\text{before}_T} \neq 0$
+
+## ONE SAMPLE T-TEST - Before1
+
+Our t.test for the pre-release breed trends yielded a p-value of 0.4647, a t-value of -0.7394 and a CI of [-1069.04, 498.64], all of which indicate no statistical significance. Our p-value does not satisfy our alpha criteria, our t-value is very small, and our CI contains 0. This would suggest to us that there was no evidence that dog breeds featured in movies were already gaining popularity in the year prior to the films release.
+
+```{r}
+t.test(movies$before1, mu = 0)
+```
+
+### Bayesian Approach:
+
+```{r}
+before1 <- movies$before1
+before1 <- before1[is.finite(before1)]
+
+bf_b1 <- ttestBF(x = before1, mu = 0, rscale = "medium")
+bf_b1
+
+post_b1 <- posterior(bf_b1, iterations = 50000)
+mu_b1 <- as.mcmc(post_b1[, "mu"])
+
+mean(mu_b1)
+hdi(mu_b1, credMass = 0.95)
+
+```
+
+## ONE SAMPLE T-TEST - Before2
+
+Our t.test for the pre-release breed trends yielded a p-value of 0.737, a t-value of -0.33865 and a CI of [-662.698, 473.38], all of which indicate no statistical significance. Our p-value does not satisfy our alpha criteria, our t-value is very small, and our CI contains 0. This would suggest to us, similar as for before1 trend, that there was no evidence that dog breeds featured in movies were already gaining popularity in the two years prior to the films release.
+
+```{r}
+t.test(movies$before2, mu = 0)
+```
+
+### Bayesian Approach
+
+```{r}
+before2 <- movies$before2
+before2 <- before2[is.finite(before2)]
+
+bf_b2 <- ttestBF(x = before2, mu = 0, rscale = "medium")
+bf_b2
+
+post_b2 <- posterior(bf_b2, iterations = 50000)
+mu_b2 <- as.mcmc(post_b2[, "mu"])
+
+mean(mu_b2)
+hdi(mu_b2, credMass = 0.95)
+
+```
+
+## ONE SAMPLE T-TEST - Before5
+
+Our t.test for the pre-release breed trends yielded a p-value of 0.7356, a t-value of 0.3407, and a CI of [-542.33, 759.89], all of which indicate no statistical significance. Our p-value continues to not satisfy our alpha criteria, our t-value is very small, and our CI contains 0. This would suggest to us, consistent with all the tests prior, that there was no evidence that dog breeds featured in movies were already gaining popularity in the five years prior to the films release.
+
+```{r}
+t.test(movies$before5, mu = 0)
+```
+
+### Bayesian Approach:
+
+```{r}
+before5 <- movies$before5
+before5 <- before5[is.finite(before5)]
+
+bf_b5 <- ttestBF(x = before5, mu = 0, rscale = "medium")
+bf_b5
+
+post_b5 <- posterior(bf_b5, iterations = 50000)
+mu_b5 <- as.mcmc(post_b5[, "mu"])
+
+mean(mu_b5)
+hdi(mu_b5, credMass = 0.95)
+
+```
+
+## ONE SAMPLE T-TEST - Before10
+
+Our t.test for the pre-release breed trends yielded a p-value of 0.1537, a t-value of -1.4648 and a CI of [-170.847, 1033.107], all of which indicate no statistical significance. As with all the tests prior, our p-value does not satisfy our alpha criteria, our t-value is very small, and our CI contains 0. This would suggest to us that there was no evidence that dog breeds featured in movies were already gaining popularity in the ten years prior to the films release
+
+```{r}
+t.test(movies$before10, mu = 0)
+```
+
+### Bayesian Approach:
+
+```{r}
+before10 <- movies$before10
+before10 <- before10[is.finite(before10)]
+
+bf_b10 <- ttestBF(x = before10, mu = 0, rscale = "medium")
+bf_b10
+
+post_b10 <- posterior(bf_b10, iterations = 50000)
+mu_b10 <- as.mcmc(post_b10[, "mu"])
+
+mean(mu_b10)
+hdi(mu_b10, credMass = 0.95)
+
+```
+
+## CONCLUSION:
+
+Our findings were consistent with the case studies that there all four t-tests for the pre-trend releases found no evidence that the dog breeds were already rising before factoring in the movies. For each test the p-value, t-value, and confidence interval was insignificant and/or contained zero. Given that the tests could not suggest any pre-release trends, it would support that the increase in breed popularity after a movies release could be causation and no just correlation.
+
+```{r}
+before_summary <- data.frame(
+  window = c("Before1", "Before2", "Before5", "Before10"),
+  post_mean = c(mean(mu_b1), mean(mu_b2), mean(mu_b5), mean(mu_b10)),
+  hdi_lower = c(hdi(mu_b1)[1], hdi(mu_b2)[1], hdi(mu_b5)[1], hdi(mu_b10)[1]),
+  hdi_upper = c(hdi(mu_b1)[2], hdi(mu_b2)[2], hdi(mu_b5)[2], hdi(mu_b10)[2])
+)
+
+before_summary$window <- factor(before_summary$window,
+                                levels = c("Before1", "Before2", "Before5", "Before10"))
+
+ggplot(before_summary, aes(x = post_mean, y = window)) +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  geom_pointrange(aes(xmin = hdi_lower, xmax = hdi_upper)) +
+  labs(
+    title = "Posterior Mean Pre-Release Trends (with 95% HDIs)",
+    x = "Posterior Mean Trend (ΔT)",
+    y = "Pre-Release Window"
+  ) +
+  theme_minimal(base_size = 14)
+ggsave("section5.pdf", width = 8, height = 6, dpi = 300)
+```
+
+```{r}
+before_freq <- movies %>%
+  summarize(
+    mean_b1 = mean(before1, na.rm = TRUE),
+    se_b1   = sd(before1, na.rm = TRUE) / sqrt(sum(!is.na(before1))),
+    mean_b2 = mean(before2, na.rm = TRUE),
+    se_b2   = sd(before2, na.rm = TRUE) / sqrt(sum(!is.na(before2))),
+    mean_b5 = mean(before5, na.rm = TRUE),
+    se_b5   = sd(before5, na.rm = TRUE) / sqrt(sum(!is.na(before5))),
+    mean_b10 = mean(before10, na.rm = TRUE),
+    se_b10   = sd(before10, na.rm = TRUE) / sqrt(sum(!is.na(before10)))
+  )
+
+before_plot <- data.frame(
+  window = c("Before1", "Before2", "Before5", "Before10"),
+  mean = c(before_freq$mean_b1, before_freq$mean_b2, before_freq$mean_b5, before_freq$mean_b10),
+  lower = c(before_freq$mean_b1 - 1.96*before_freq$se_b1,
+            before_freq$mean_b2 - 1.96*before_freq$se_b2,
+            before_freq$mean_b5 - 1.96*before_freq$se_b5,
+            before_freq$mean_b10 - 1.96*before_freq$se_b10),
+  upper = c(before_freq$mean_b1 + 1.96*before_freq$se_b1,
+            before_freq$mean_b2 + 1.96*before_freq$se_b2,
+            before_freq$mean_b5 + 1.96*before_freq$se_b5,
+            before_freq$mean_b10 + 1.96*before_freq$se_b10)
+)
+
+ggplot(before_plot, aes(x = mean, y = window)) +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  geom_pointrange(aes(xmin = lower, xmax = upper)) +
+  labs(
+    title = "Pre-Release Trend Means (with 95% CIs)",
+    x = "Mean Trend Value",
+    y = "Pre-Release Window"
+  ) +
+  theme_minimal(base_size = 14)
+
+```
+
+# SECTION 6: DO MOVIES WITH BIG EFFECTS ALREADY FEATURE RISING BREEDS?
+
+In this section we want to answer the question: do movies with big effects already feature rising breeds? This is similar to our previous test, but we want to determine if the movies chose breeds to be features that were already rising in popularity. This will be comparing the pre-release trends between the movies that authors chose to keep, included movies, and the movies the authors chose not to keep, excluded movies. The case study also only runs one two sample t-test using the 10 year trend change effect with included and excluded as a dummy variable.
+
+Our null hypothesis for this section is:\
+$H_0: \mu_{\text{before}_{10},\,\text{included}} = \mu_{\text{before}_{10},\,\text{excluded}}$
+
+Our alternative hypothesis for this section is:\
+$H_a: \mu_{\text{before}_{10},\,\text{included}} \neq \mu_{\text{before}_{10},\,\text{excluded}}$
+
+## TWO SAMPLE T-TEST
+
+Our two sample t-test for the 10 year trend change effect for pre-release trends yielded a p-value of 0.1918, a t-value of 1.3243, and a CI of [-245.346, 1191.314]. Our p-value does not satisfy our alpha, our t-value is small, and our CI contains 0, all of which suggest that there is not statistical significant evidence for our alternative hypothesis and we would fail to reject. Our findings are consistent with the study and that there is no significant difference between the pre-release trends for movies included in the analysis and movies not included in the analysis. This additionally supports the case that the movies could be causation and not correlation.
+
+```{r}
+table(movies$include)
+t.test(before10 ~ include, data=movie_data)
+```
+
+### Bayesian Analysis
+
+```{r}
+df_inc <- subset(
+  movie_data,
+  is.finite(before10) & !is.na(include)
+)
+
+df_inc$include <- factor(df_inc$include)
+table(df_inc$include)
+
+bf_inc <- ttestBF(
+  formula = before10 ~ include,
+  data    = df_inc,
+  rscale  = "medium"
+)
+
+bf_inc
+
+```
+
+\
+
+```{r}
+
+before10_summary <- df_inc %>%
+  group_by(include) %>%
+  summarise(
+    mean_before10 = mean(before10, na.rm = TRUE),
+    se_before10   = sd(before10, na.rm = TRUE) / sqrt(sum(!is.na(before10))),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    lower = mean_before10 - 1.96 * se_before10,
+    upper = mean_before10 + 1.96 * se_before10
+  )
+
+before10_summary
+
+ggplot(before10_summary, aes(x = include, y = mean_before10)) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_pointrange(aes(ymin = lower, ymax = upper)) +
+  labs(
+    title = "Pre-Release 10-Year Trends by Movie Inclusion",
+    x = "Movie group",
+    y = "Mean 10-year pre-release trend (before10)"
+  ) +
+  theme_minimal(base_size = 14)
+ggsave("section6.pdf", width = 8, height = 6, dpi = 300)
+```
+
+# SECTION 7: DOES THE SIGN OF PRE-TREND MATTER FOR MOVIE EFFECT?
+
+In this last section we want to run wilcoxon rank sum tests to answer the question: Do breeds that were rising **before** the movie show bigger movie effects **after** the movie? We want to compare breeds with positive pre-release trends with breeds with negative pre-release trends, for each effect size.
+
+Our null hypothesis for this section:\
+$H_0: \text{The distribution of}  \Delta_T  \text{is the same for increasing and decreasing pre-release trends.}$
+
+Our alternative hypothesis for this section:\
+$H_a: \text{The distributions differ between increasing and decreasing pre-release trends}$
+
+Before running the tests we will need to create the grouping variables.
+
+```{r}
+movies$pretrend1  <- ifelse(movies$before1  > 0, "Increasing", "Decreasing")
+movies$pretrend2  <- ifelse(movies$before2  > 0, "Increasing", "Decreasing")
+movies$pretrend5  <- ifelse(movies$before5  > 0, "Increasing", "Decreasing")
+movies$pretrend10 <- ifelse(movies$before10 > 0, "Increasing", "Decreasing")
+```
+
+## WILCOXON RANK SUM TEST (effect 1)
+
+In our first test, we yielded a p-value of 0.6252, therefore we would fail to reject the null hypothesis. The size of the 1-year movie effect does not depend on whether or not the dog breed was trending upward or downward before the movie.
+
+```{r}
+wilcox.test(effect1 ~ pretrend1, data = movies)
+```
+
+```{r}
+inc1 <- with(movies, effect1[pretrend1 == "Increasing"])
+dec1 <- with(movies, effect1[pretrend1 == "Decreasing"])
+
+# clean out NA / Inf
+inc1 <- inc1[is.finite(inc1)]
+dec1 <- dec1[is.finite(dec1)]
+
+bf_e1 <- ttestBF(x = inc1, y = dec1, rscale = "medium")
+bf_e1
+
+post_e1 <- posterior(bf_e1, iterations = 50000)
+delta_e1 <- as.mcmc(post_e1[, "delta"])
+
+mean(delta_e1)
+hdi(delta_e1, credMass = 0.95)
+
+```
+
+## WILCOXON RANK SUM TEST (effect 2)
+
+Our second test yielded a p-value of 0.8776, therefore we would fail to reject the null hypothesis. The size of the 2-year movie effect does not depend on whether or not the dog breed was trending upward or downward before the movie.
+
+```{r}
+wilcox.test(effect2 ~ pretrend2, data = movies)
+```
+
+```{r}
+inc2 <- with(movies, effect2[pretrend2 == "Increasing"])
+dec2 <- with(movies, effect2[pretrend2 == "Decreasing"])
+
+inc2 <- inc2[is.finite(inc2)]
+dec2 <- dec2[is.finite(dec2)]
+
+bf_e2 <- ttestBF(x = inc2, y = dec2, rscale = "medium")
+bf_e2
+
+post_e2 <- posterior(bf_e2, iterations = 50000)
+delta_e2 <- as.mcmc(post_e2[, "delta"])
+
+mean(delta_e2)
+hdi(delta_e2, credMass = 0.95)
+
+```
+
+## WILCOXON RANK SUM TEST (effect 5)
+
+Our third test yielded a p-value of 0.2078, therefore we would fail to reject the null hypothesis. The size of the 5-year movie effect does not depend on whether or not the dog breed was trending upward or downward before the movie.
+
+```{r}
+wilcox.test(effect5 ~ pretrend5, data = movies)
+```
+
+```{r}
+inc5 <- with(movies, effect5[pretrend5 == "Increasing"])
+dec5 <- with(movies, effect5[pretrend5 == "Decreasing"])
+
+inc5 <- inc5[is.finite(inc5)]
+dec5 <- dec5[is.finite(dec5)]
+
+bf_e5 <- ttestBF(x = inc5, y = dec5, rscale = "medium")
+bf_e5
+
+post_e5 <- posterior(bf_e5, iterations = 50000)
+delta_e5 <- as.mcmc(post_e5[, "delta"])
+
+mean(delta_e5)
+hdi(delta_e5, credMass = 0.95)
+
+```
+
+## WILCOXON RANK SUM TEST (effect 10)
+
+Our fourth test yielded a p-value of 0.4223, therefore we would fail to reject the null hypothesis. The size of the 10-year movie effect does not depend on whether or not the dog breed was trending upward or downward before the movie.
+
+```{r}
+wilcox.test(effect10 ~ pretrend10, data = movies)
+```
+
+```{r}
+inc10 <- with(movies, effect10[pretrend10 == "Increasing"])
+dec10 <- with(movies, effect10[pretrend10 == "Decreasing"])
+
+inc10 <- inc10[is.finite(inc10)]
+dec10 <- dec10[is.finite(dec10)]
+
+bf_e10 <- ttestBF(x = inc10, y = dec10, rscale = "medium")
+bf_e10
+
+post_e10 <- posterior(bf_e10, iterations = 50000)
+delta_e10 <- as.mcmc(post_e10[, "delta"])
+
+mean(delta_e10)
+hdi(delta_e10, credMass = 0.95)
+
+```
+
+## CONCLUSION:
+
+All four of our Wilcox tests indicate that there was no difference in the trend change effect for breeds that were already rising in popularity before the film. This also confirms that the findings we found in our earlier tests are independent of pre-existing trends. This is consistent to what was found in the case study as well.
+
+```{r}
+plot_df <- movies %>%
+  dplyr::select(effect1, effect2, effect5, effect10,
+         pretrend1, pretrend2, pretrend5, pretrend10) %>%
+  pivot_longer(
+    cols = starts_with("effect"),
+    names_to = "effect_window",
+    values_to = "effect_value"
+  ) %>%
+  mutate(
+    pretrend = case_when(
+      effect_window == "effect1"  ~ pretrend1,
+      effect_window == "effect2"  ~ pretrend2,
+      effect_window == "effect5"  ~ pretrend5,
+      effect_window == "effect10" ~ pretrend10
+    )
+  )
+
+ggplot(plot_df, aes(x = pretrend, y = effect_value, fill = pretrend)) +
+  geom_violin(trim = FALSE, alpha = 0.4) +
+  geom_point(stat = "summary", fun = "mean", size = 3) +
+  facet_wrap(~ effect_window, scales = "free_y", ncol = 2) +
+  labs(
+    title = "Movie Effects by Pre-Release Trend Direction",
+    x = "Pre-Release Trend",
+    y = "Movie Effect Size (ΔT)"
+  ) +
+  theme_minimal(base_size = 14)
+#ggsave("section7.pdf", width = 8, height = 6, dpi = 300)
+```
