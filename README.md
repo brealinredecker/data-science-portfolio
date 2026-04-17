@@ -1,7 +1,9 @@
 # Applied Data Science Portfolio
 Graduate student at Syracuse University with experience in data analysis, statistical modeling, database design, and data visualization. This portfolio highlights projects across undergraduate and graduate coursework, focused on solving real-world problems using data.
 
-1. Predicting Energy Usage in South Carolina - SPRING 2024 <br>
+<h2>Projects</h2>
+
+<h3>1. Predicting Energy Usage in South Carolina - SPRING 2024 </h3>
 -IST387 - Introduction to Data Science. <br>
 -Worked on a two man group project to predict energy usage in South Carolina houses in the summer. <br>
 -Created 5 different regression models grouping the variables into different categories in order to predict "month_total_electricty_usage". <br>
@@ -56,7 +58,7 @@ Graduate student at Syracuse University with experience in data analysis, statis
 -IST707 - Machine Learning<br>
 -Currently a work in progress.<br>
 
-<h2>Tools & Technologies </h2><br>
+<h2>Tools & Technologies </h2>
 Languages: Python, R, SQL <br>
 Libraries: pandas, NumPy, scikit-learn, ggplot2, tidyverse<br>
 Data Tools: Jupyter Notebook, RStudio, Snowflake, dbt, Microsoft Excel, Microsoft Word, Microsoft Powerpoint<br>
