@@ -36,8 +36,14 @@ This is my data science portfolio showcasing my projects and case studies that I
 -Performed data cleaning, feature engineering, and statistical modeling to evaluate variables such as age, breed, sex, and color.<br>
 -Built visualizations and regression models to uncover insights about adoption likelihood and challenge common assumptions.<br>
 
-7. Dog Adoption Predictions - FALL 2025 <br>
--IST652 - Scripting for Data Analysis<br>
--Analyzed large-scale animal shelter data (~350k+ records) across multiple cities to identify key drivers of dog adoption outcomes.<br>
--Performed data cleaning, feature engineering, and statistical modeling to evaluate variables such as age, breed, sex, and color.<br>
--Built visualizations and regression models to uncover insights about adoption likelihood and challenge common assumptions.<br>
+7. Movie and Dog Popularity Case Study Replication - FALL 2025 <br>
+-IST686 - Scripting for Data Analysis<br>
+-<br>
+-<br>
+-<br>
+
+8. Baseball Atendance Predicitons - FALL 2025
+-MAS766 - Linear Statistical Models I<br>
+-<br>
+-<br>
+-<br>
