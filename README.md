@@ -9,35 +9,35 @@ This is my data science portfolio showcasing my projects and case studies that I
 
 2. National Booksellers Incorporated ERD Modeling - FALL 2024 <br>
 -IST352 - Information Analysis of Organizational Systems <br>
--Worked on a three man group project to design a full information system for NBI addressing operational inefficiencies and system limitations.
+-Worked on a three man group project to design a full information system for NBI addressing operational inefficiencies and system limitations.<br>
 -Developed system models including Data Flow Diagrams (DFD) and Entity Relationship Diagrams (ERDs) to map business processes and data structure. <br>
 
 3. Fast Food Restaurants: Who Should You Choose? - FALL 2024 <br>
--IST421 - Information Visualization
--Collected, cleaned, and merged nutritional data from multiple fast food chains to create a unified dataset for analysis
--Developed a custom “health score” metric to evaluate and compare menu items across restaurants
--Built visualizations to compare health trends, identify healthiest/unhealthiest items, and challenge common assumptions about fast food and compiled them into a poster.
+-IST421 - Information Visualization<br>
+-Collected, cleaned, and merged nutritional data from multiple fast food chains to create a unified dataset for analysis. <br>
+-Developed a custom “health score” metric to evaluate and compare menu items across restaurants. <br>
+-Built visualizations to compare health trends, identify healthiest/unhealthiest items, and challenge common assumptions about fast food and compiled them into a poster.<br>
 
 4. Syracuse University Women's Rugby Website - SPRING 2025 <br>
--IST263 - Introduction to Front-End Web Development
--Designed and developed a multi-page website for the Syracuse University Women’s Rugby Team to showcase team information, roster, and performance stats.
--Implemented responsive layouts using HTML, CSS, and Flexbox to ensure usability across desktop and mobile devices.
--Built interactive features such as player leaderboards and image galleries to enhance user engagement and storytelling.
+-IST263 - Introduction to Front-End Web Development<br>
+-Designed and developed a multi-page website for the Syracuse University Women’s Rugby Team to showcase team information, roster, and performance stats.<br>
+-Implemented responsive layouts using HTML, CSS, and Flexbox to ensure usability across desktop and mobile devices.<br>
+-Built interactive features such as player leaderboards and image galleries to enhance user engagement and storytelling.<br>
 
 5. Passenger Train Management System - FALL 2025 <br>
--IST659 - Data Administration Concepts and Database Management
--Designed and implemented a relational database system for a Passenger Train Management System, modeling complex real-world operations like scheduling, ticketing, and maintenance.
--Developed conceptual and logical data models (ERDs) and normalized schemas to ensure data integrity and scalability.
--Built advanced SQL functionality including stored procedures, functions, and triggers to enforce business rules and automate processes.
+-IST659 - Data Administration Concepts and Database Management<br>
+-Designed and implemented a relational database system for a Passenger Train Management System, modeling complex real-world operations like scheduling, ticketing, and maintenance.<br>
+-Developed conceptual and logical data models (ERDs) and normalized schemas to ensure data integrity and scalability.<br>
+-Built advanced SQL functionality including stored procedures, functions, and triggers to enforce business rules and automate processes.<br>
 
 6. Dog Adoption Predictions - FALL 2025 <br>
--IST652 - Scripting for Data Analysis
--Analyzed large-scale animal shelter data (~350k+ records) across multiple cities to identify key drivers of dog adoption outcomes.
--Performed data cleaning, feature engineering, and statistical modeling to evaluate variables such as age, breed, sex, and color.
--Built visualizations and regression models to uncover insights about adoption likelihood and challenge common assumptions.
+-IST652 - Scripting for Data Analysis<br>
+-Analyzed large-scale animal shelter data (~350k+ records) across multiple cities to identify key drivers of dog adoption outcomes.<br>
+-Performed data cleaning, feature engineering, and statistical modeling to evaluate variables such as age, breed, sex, and color.<br>
+-Built visualizations and regression models to uncover insights about adoption likelihood and challenge common assumptions.<br>
 
 7. Dog Adoption Predictions - FALL 2025 <br>
--IST652 - Scripting for Data Analysis
--Analyzed large-scale animal shelter data (~350k+ records) across multiple cities to identify key drivers of dog adoption outcomes.
--Performed data cleaning, feature engineering, and statistical modeling to evaluate variables such as age, breed, sex, and color.
--Built visualizations and regression models to uncover insights about adoption likelihood and challenge common assumptions.
+-IST652 - Scripting for Data Analysis<br>
+-Analyzed large-scale animal shelter data (~350k+ records) across multiple cities to identify key drivers of dog adoption outcomes.<br>
+-Performed data cleaning, feature engineering, and statistical modeling to evaluate variables such as age, breed, sex, and color.<br>
+-Built visualizations and regression models to uncover insights about adoption likelihood and challenge common assumptions.<br>
