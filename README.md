@@ -1,5 +1,5 @@
 # Applied Data Science Portfolio
-Graduate student at Syracuse University with experience in data analysis, statistical modeling, database design, and data visualization. This portfolio highlights projects across undergraduate and graduate coursework, focused on solving real-world problems using data.
+Graduate student at Syracuse University focused on data analysis and predictive modeling. Experienced in building regression models, designing databases, and analyzing large-scale datasets to solve real-world problems across domains including sports analytics, public safety, and consumer behavior.
 
 <h2>Projects</h2>
 
@@ -8,6 +8,7 @@ Graduate student at Syracuse University with experience in data analysis, statis
 - Worked on a two-person group project to predict summer energy usage in South Carolina households <br>
 - Built 5 regression models using different variable groupings to predict "month_total_electricity_usage" <br>
 - Created visualizations to compare model performance and interpret results <br>
+- <a href="https://github.com/brealinredecker/data-science-portfolio/tree/9c8e8380117315c2782431a7bdb0604e112c7ec2/01.%20Predicting%20Energy%20Usage%20in%20South%20Carolina%20Houses">View Project</a><br>
 
 <h3>2. National Booksellers Incorporated ERD Modeling - FALL 2024</h3>
 - IST352 - Information Analysis of Organizational Systems <br>
