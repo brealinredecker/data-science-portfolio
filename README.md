@@ -15,42 +15,49 @@ Graduate student at Syracuse University focused on data analysis and predictive 
 - Worked on a three-person group project to design a full information system for NBI <br>
 - Addressed operational inefficiencies and system limitations through system design <br>
 - Developed Data Flow Diagrams (DFDs) and Entity Relationship Diagrams (ERDs) to model processes and data structure <br>
+- <a href="https://github.com/brealinredecker/data-science-portfolio/tree/9c8e8380117315c2782431a7bdb0604e112c7ec2/02.%20National%20Booksellers%20Incorporated%20ERD%20Modeling">View Project</a><br>
 
 <h3>3. Fast Food Restaurants: Who Should You Choose? - FALL 2024</h3>
 - IST421 - Information Visualization <br>
 - Collected, cleaned, and merged nutritional data from multiple fast food chains <br>
 - Developed a custom “health score” metric to compare menu items across restaurants <br>
 - Built visualizations and a final poster to highlight trends and challenge common assumptions about fast food <br>
+- <a href="https://github.com/brealinredecker/data-science-portfolio/tree/9c8e8380117315c2782431a7bdb0604e112c7ec2/03.%20Fast%20Food%20Restaurants%3A%20Who%20Should%20You%20Choose%3F">View Project</a><br>
 
 <h3>4. Syracuse University Women's Rugby Website - SPRING 2025</h3>
 - IST263 - Introduction to Front-End Web Development <br>
 - Designed and developed a multi-page website for the Syracuse University Women’s Rugby Team <br>
 - Implemented responsive layouts using HTML, CSS, and Flexbox for cross-device usability <br>
 - Built interactive features such as player leaderboards and image galleries to enhance engagement <br>
+- <a href="https://brealinredecker.github.io/ist263/project-7/">View Project</a><br>
 
 <h3>5. Passenger Train Management System - FALL 2025</h3>
 - IST659 - Data Administration Concepts and Database Management <br>
 - Designed and implemented a relational database system for train scheduling, ticketing, and maintenance <br>
 - Developed conceptual and logical data models (ERDs) and normalized schemas <br>
 - Built SQL stored procedures, functions, and triggers to enforce business rules and automate processes <br>
+- <a href="https://github.com/brealinredecker/data-science-portfolio/tree/9c8e8380117315c2782431a7bdb0604e112c7ec2/05.%20Passenger%20Train%20Management%20System">View Project</a><br>
 
 <h3>6. Dog Adoption Predictions - FALL 2025</h3>
 - IST652 - Scripting for Data Analysis <br>
 - Analyzed ~350k+ animal shelter records across multiple cities <br>
 - Performed data cleaning, feature engineering, and regression modeling <br>
 - Identified key drivers of adoption outcomes and visualized insights <br>
+- <a href="https://github.com/brealinredecker/data-science-portfolio/tree/9c8e8380117315c2782431a7bdb0604e112c7ec2/03.%20Fast%20Food%20Restaurants%3A%20Who%20Should%20You%20Choose%3F">View Project</a><br>
 
 <h3>7. Movie and Dog Popularity Case Study Replication - FALL 2025</h3>
 - IST686 - Scripting for Data Analysis <br>
 - Replicated and extended an academic study on media influence and dog breed popularity <br>
 - Applied frequentist and Bayesian statistical methods (t-tests, regression, correlation analysis) <br>
 - Found significant long-term increases in breed popularity, with declining effects in more recent films <br>
+- <a href="https://github.com/brealinredecker/data-science-portfolio/tree/9c8e8380117315c2782431a7bdb0604e112c7ec2/03.%20Fast%20Food%20Restaurants%3A%20Who%20Should%20You%20Choose%3F">View Project</a><br>
 
 <h3>8. Baseball Attendance Predictions - FALL 2025</h3>
 - MAS766 - Linear Statistical Models I <br>
 - Analyzed MLB game data (2015–2025) to identify key drivers of attendance <br>
 - Built stepwise regression models incorporating interaction and seasonality effects <br>
 - Developed a final model explaining ~73% of attendance variance with actionable insights <br>
+- <a href="https://github.com/brealinredecker/data-science-portfolio/tree/9c8e8380117315c2782431a7bdb0604e112c7ec2/03.%20Fast%20Food%20Restaurants%3A%20Who%20Should%20You%20Choose%3F">View Project</a><br>
 
 <h3>9. Premier League Match Performance - SPRING 2025</h3>
 - IST722 - Data Warehouse <br>
