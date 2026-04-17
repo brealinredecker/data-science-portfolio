@@ -38,12 +38,20 @@ This is my data science portfolio showcasing my projects and case studies that I
 
 7. Movie and Dog Popularity Case Study Replication - FALL 2025 <br>
 -IST686 - Scripting for Data Analysis<br>
--<br>
--<br>
--<br>
+-Replicated and extended an academic study analyzing the impact of dog movies on breed popularity using real-world data<br>
+-Applied both frequentist and Bayesian statistical methods (t-tests, regression, correlation analysis) to evaluate short- and long-term effects<br>
+-Found that movies significantly increase breed popularity over time, with stronger long-term effects and declining influence in more recent films<br>
 
 8. Baseball Atendance Predicitons - FALL 2025
 -MAS766 - Linear Statistical Models I<br>
--<br>
--<br>
--<br>
+-Analyzed MLB game data (2015–2025) to identify key factors driving attendance, including game timing, weather, team performance, and venue characteristics.<br>
+-Built and refined multiple regression models using a stepwise approach to determine the most influential predictors.<br>
+-Developed a final predictive model explaining ~73% of attendance variance, uncovering actionable insights for fan engagement strategies.<br>
+
+9. Premier League Match Performance - SPRING 2025
+-IST722 - Data Warehouse<br>
+-Currently a work in progress.<br>
+
+10. LAPD Crime Prediction Model - SPRING 2025
+-IST707 - Machine Learning<br>
+-Currently a work in progress.<br>
