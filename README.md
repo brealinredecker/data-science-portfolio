@@ -75,5 +75,5 @@ Libraries: pandas, NumPy, scikit-learn, ggplot2, tidyverse<br>
 Data Tools: Jupyter Notebook, RStudio, Snowflake, dbt, Microsoft Excel, Microsoft Word, Microsoft Powerpoint<br>
 
 <h2>Contact</h2>
-LinkedIn: <a href="https://www.linkedin.com/in/brealinredecker/">Your LinkedIn</a><br>
+LinkedIn: <a href="https://www.linkedin.com/in/brealinredecker/">Brealin Redecker</a><br>
 Email: brealinredecker1@gmail.com<br>
