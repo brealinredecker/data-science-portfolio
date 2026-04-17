@@ -1,5 +1,5 @@
 # Applied Data Science Portfolio
-This is my data science portfolio showcasing my projects and case studies that I have completed in both undergraduate and graduate programs.
+Graduate student at Syracuse University with experience in data analysis, statistical modeling, database design, and data visualization. This portfolio highlights projects across undergraduate and graduate coursework, focused on solving real-world problems using data.
 
 1. Predicting Energy Usage in South Carolina - SPRING 2024 <br>
 -IST387 - Introduction to Data Science. <br>
@@ -55,3 +55,8 @@ This is my data science portfolio showcasing my projects and case studies that I
 10. LAPD Crime Prediction Model - SPRING 2025
 -IST707 - Machine Learning<br>
 -Currently a work in progress.<br>
+
+<h2>Tools & Technologies <h2><br>
+Languages: Python, R, SQL <br>
+Libraries: pandas, NumPy, scikit-learn, ggplot2, tidyverse<br>
+Data Tools: Jupyter Notebook, RStudio, Snowflake, dbt, Microsoft Excel, Microsoft Word, Microsoft Powerpoint<br>
