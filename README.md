@@ -30,4 +30,14 @@ This is my data science portfolio showcasing my projects and case studies that I
 -Developed conceptual and logical data models (ERDs) and normalized schemas to ensure data integrity and scalability.
 -Built advanced SQL functionality including stored procedures, functions, and triggers to enforce business rules and automate processes.
 
-6. 
+6. Dog Adoption Predictions - FALL 2025 <br>
+-IST652 - Scripting for Data Analysis
+-Analyzed large-scale animal shelter data (~350k+ records) across multiple cities to identify key drivers of dog adoption outcomes.
+-Performed data cleaning, feature engineering, and statistical modeling to evaluate variables such as age, breed, sex, and color.
+-Built visualizations and regression models to uncover insights about adoption likelihood and challenge common assumptions.
+
+7. Dog Adoption Predictions - FALL 2025 <br>
+-IST652 - Scripting for Data Analysis
+-Analyzed large-scale animal shelter data (~350k+ records) across multiple cities to identify key drivers of dog adoption outcomes.
+-Performed data cleaning, feature engineering, and statistical modeling to evaluate variables such as age, breed, sex, and color.
+-Built visualizations and regression models to uncover insights about adoption likelihood and challenge common assumptions.
