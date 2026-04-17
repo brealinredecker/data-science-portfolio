@@ -57,6 +57,7 @@ Graduate student at Syracuse University with experience in data analysis, statis
 -Currently a work in progress.<br>
 
 <h2>Tools & Technologies <h2><br>
-Languages: Python, R, SQL <br>
-Libraries: pandas, NumPy, scikit-learn, ggplot2, tidyverse<br>
-Data Tools: Jupyter Notebook, RStudio, Snowflake, dbt, Microsoft Excel, Microsoft Word, Microsoft Powerpoint<br>
+<p> Languages: Python, R, SQL <br>
+    Libraries: pandas, NumPy, scikit-learn, ggplot2, tidyverse<br>
+    Data Tools: Jupyter Notebook, RStudio, Snowflake, dbt, Microsoft Excel, Microsoft Word, Microsoft Powerpoint<br>
+</p>
