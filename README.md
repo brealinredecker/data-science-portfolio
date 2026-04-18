@@ -1,6 +1,7 @@
 <img src="images/brealin_portfolio.png" width="700">
 <h1>Applied Data Science Portfolio</h1>
 Graduate student at Syracuse University focused on data analysis and predictive modeling. Experienced in building regression models, designing databases, and analyzing large-scale datasets to solve real-world problems across domains including sports analytics, public safety, and consumer behavior.
+This portfolio aims to highlight projects across analytics, machine learning, database systems, and data visualization.
 
 <hr>
 <h2>Projects</h2>
