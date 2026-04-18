@@ -2,6 +2,7 @@
 <h1>Applied Data Science Portfolio</h1>
 Graduate student at Syracuse University focused on data analysis and predictive modeling. Experienced in building regression models, designing databases, and analyzing large-scale datasets to solve real-world problems across domains including sports analytics, public safety, and consumer behavior.
 
+<hr>
 <h2>Projects</h2>
 
 <h3>1. Predicting Energy Usage in South Carolina - SPRING 2024</h3>
