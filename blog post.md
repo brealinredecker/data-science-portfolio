@@ -109,3 +109,5 @@ One of the most important lessons I learned is that data science is an iterative
 Another key takeaway is the importance of communication. Being able to build a model is valuable, but being able to explain what that model means and why it matters is just as important. Throughout the program, I learned how to translate technical results into clear, actionable insights, which is a skill I will carry forward in my career.
 
 Overall, the program has given me a strong foundation in both the technical and practical aspects of data science. More importantly, it has changed the way I approach problems. I now think more critically, ask better questions, and rely on data to guide decision-making rather than assumptions. As I move forward, I feel confident in my ability to apply these skills to real-world challenges and continue growing in the field of data science.
+
+Video Link: 
