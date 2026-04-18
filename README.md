@@ -71,12 +71,12 @@ This portfolio aims to highlight projects across analytics, machine learning, da
 - Found that star players, weekend games, and historic ballparks significantly increase attendance <br>
 - <a href="https://github.com/brealinredecker/data-science-portfolio/tree/65486279510d0c3172dd598c2f72945294f0fd40/08.%20Baseball%20Attendance%20Predictions">View Project</a><br>
 
-<h3>9. Premier League Match Performance - SPRING 2025</h3>
+<h3>9. Premier League Match Performance - SPRING 2026</h3>
 - IST722 - Data Warehouse <br>
 - Designing a dimensional data model and ETL pipeline for match performance analysis <br>
 - Currently a work in progress <br>
 
-<h3>10. LAPD Crime Prediction Model - SPRING 2025</h3>
+<h3>10. LAPD Crime Prediction Model - SPRING 2026</h3>
 - IST707 - Machine Learning <br>
 - Building predictive models to identify crime patterns and volatility <br>
 - Currently a work in progress <br>

@@ -1,2 +1,4 @@
-<h1>Applied Data Science Portfolio</h1>
+<h1>Blog Post</h1> <br>
+
+During both my undergraduate and graduate
 
