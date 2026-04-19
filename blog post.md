@@ -94,7 +94,7 @@ Using both approaches allowed me to compare results across different statistical
 
 During my time working on the replication study, I learned that... <br>
 
-* There is rarely one “correct” method for analyzing data <br>
+* There is rarely one correct method for analyzing data <br>
 * Different approaches can provide complementary perspectives <br>
 * Strong analysis involves validating results from multiple angles <br>
 
@@ -110,4 +110,4 @@ Another key takeaway is the importance of communication. Being able to build a m
 
 Overall, the program has given me a strong foundation in both the technical and practical aspects of data science. More importantly, it has changed the way I approach problems. I now think more critically, ask better questions, and rely on data to guide decision-making rather than assumptions. As I move forward, I feel confident in my ability to apply these skills to real-world challenges and continue growing in the field of data science.
 
-Video Link: 
+<a href="https://drive.google.com/file/d/1Gx6XzPZl9RQFy_OCAhIcZLmEHTfRowB0/view?usp=sharing">Video Reflection (use syr email)</a><br>
